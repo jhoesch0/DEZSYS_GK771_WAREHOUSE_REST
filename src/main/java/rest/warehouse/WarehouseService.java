@@ -1,7 +1,7 @@
-package tradearea.warehouse;
+package rest.warehouse;
 
 import org.springframework.stereotype.Service;
-import tradearea.model.WarehouseData;
+import rest.model.WarehouseData;
 
 @Service
 public class WarehouseService {
@@ -10,10 +10,10 @@ public class WarehouseService {
         return "Greetings from " + inModule;
     }
 
-    public WarehouseData getWarehouseData( String inID ) {
+    public WarehouseData getWarehouseData( String inID,String name ) {
     	
     	WarehouseSimulation simulation = new WarehouseSimulation();
-        return simulation.getData( inID );
+        return simulation.getData( inID,name );
         
     }
     

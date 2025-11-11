@@ -1,29 +1,50 @@
-package tradearea.warehouse;
+package rest.warehouse;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import rest.model.ProductData;
+import rest.model.WarehouseData;
 
-import tradearea.model.WarehouseData;
+import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class WarehouseController {
 
     @Autowired
     private WarehouseService service;
-	
-    @RequestMapping("/")
-    public String warehouseMain() {
-    	String mainPage = "This is the warehouse application! (DEZSYS_WAREHOUSE_REST) <br/><br/>" +
-                          "<a href='http://localhost:8080/warehouse/001/json'>Link to warehouse/001/json</a><br/>" ;
-        return mainPage;
+
+
+    @GetMapping(value = "/warehouse/{inID}/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    public WarehouseData warehouseDataJson(
+            @PathVariable String inID,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String productName) {
+
+        return filterWarehouseData(inID, location, productName);
     }
 
-    @RequestMapping(value="/warehouse/{inID}/json", produces = MediaType.APPLICATION_JSON_VALUE)
-    public WarehouseData warehouseData( @PathVariable String inID ) {
-        return service.getWarehouseData( inID );
+
+    @GetMapping(value = "/warehouse/{inID}/xml", produces = MediaType.APPLICATION_XML_VALUE)
+    public WarehouseData warehouseDataXml(
+            @PathVariable String inID,
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) String productName) {
+
+        return filterWarehouseData(inID, location, productName);
     }
 
+    private WarehouseData filterWarehouseData(String inID, String location, String productName) {
+        WarehouseData data = service.getWarehouseData(inID, location != null ? location : "Linz");
+
+        if (productName != null && !productName.isEmpty()) {
+            List<ProductData> filtered = data.getProductDataList().stream()
+                    .filter(p -> p.getProductName().toLowerCase().contains(productName.toLowerCase()))
+                    .toList();
+            data.setProductDataList(new java.util.ArrayList<>(filtered));
+        }
+
+        return data;
+    }
 }
