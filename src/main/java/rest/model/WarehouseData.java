@@ -53,9 +53,7 @@ public class WarehouseData {
 		this.timestamp = timestamp;
 	}
 
-	/**
-	 * Methods
-	 */
+
 	@Override
 	public String toString() {
 		String info = String.format("Warehouse Info: ID = %s, timestamp = %s", warehouseID, timestamp );
