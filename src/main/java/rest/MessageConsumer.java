@@ -62,7 +62,8 @@ public class MessageConsumer {
         try {
             WarehouseData data = mapper.readValue(content, WarehouseData.class);
             logger.info("Received warehouse data from queue: warehouse-queue-{}", warehouseId);
-            System.out.println("Read from Message Queue warehouse-queue-" + warehouseId + ": " + data);
+            
+            System.out.println(content);
             
             aggregatedService.addWarehouseData(data);
             logMessage("RECEIVED", warehouseId, content);

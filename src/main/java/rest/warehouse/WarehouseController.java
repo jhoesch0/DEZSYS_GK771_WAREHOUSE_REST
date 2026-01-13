@@ -60,22 +60,51 @@ public class WarehouseController {
 
     @GetMapping(value = "/warehouse/all/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<WarehouseData> getAllWarehouseDataJson() {
-        return aggregatedService.getAllWarehouseData();
+        List<WarehouseData> warehouses = aggregatedService.getAllWarehouseData();
+        printAllWarehousesToConsole(warehouses);
+        return warehouses;
     }
 
     @GetMapping(value = "/warehouse/all/xml", produces = MediaType.APPLICATION_XML_VALUE)
     public List<WarehouseData> getAllWarehouseDataXml() {
-        return aggregatedService.getAllWarehouseData();
+        List<WarehouseData> warehouses = aggregatedService.getAllWarehouseData();
+        printAllWarehousesToConsole(warehouses);
+        return warehouses;
     }
 
     @GetMapping(value = "/warehouse/aggregated/json", produces = MediaType.APPLICATION_JSON_VALUE)
     public WarehouseData getAggregatedDataJson() {
-        return aggregatedService.getAggregatedData();
+        WarehouseData aggregated = aggregatedService.getAggregatedData();
+        printAggregatedToConsole(aggregated);
+        return aggregated;
     }
 
     @GetMapping(value = "/warehouse/aggregated/xml", produces = MediaType.APPLICATION_XML_VALUE)
     public WarehouseData getAggregatedDataXml() {
-        return aggregatedService.getAggregatedData();
+        WarehouseData aggregated = aggregatedService.getAggregatedData();
+        printAggregatedToConsole(aggregated);
+        return aggregated;
+    }
+
+    private void printAllWarehousesToConsole(List<WarehouseData> warehouses) {
+        System.out.println("ZENTRALRECHNER: REST Abfrage - Alle Lagerstandorte (" + warehouses.size() + ")");
+        for (WarehouseData warehouse : warehouses) {
+            System.out.println("  Lagerstandort " + warehouse.getWarehouseID() + ": " + warehouse.getWarehouseName());
+            if (warehouse.getProductDataList() != null) {
+                warehouse.getProductDataList().forEach(product -> {
+                    System.out.println("    " + product.getProductName() + ": " + product.getProductQuantity() + " " + product.getProductUnit());
+                });
+            }
+        }
+    }
+
+    private void printAggregatedToConsole(WarehouseData aggregated) {
+        System.out.println("ZENTRALRECHNER: REST Abfrage - Aggregierte Daten");
+        if (aggregated.getProductDataList() != null) {
+            aggregated.getProductDataList().forEach(product -> {
+                System.out.println("  " + product.getProductName() + ": " + product.getProductQuantity() + " " + product.getProductUnit());
+            });
+        }
     }
 
     private WarehouseData filterWarehouseData(String inID, String location, String productName) {

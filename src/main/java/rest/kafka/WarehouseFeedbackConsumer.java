@@ -51,7 +51,6 @@ public class WarehouseFeedbackConsumer {
 
     private void processFeedback(String message, String warehouseId) {
         logger.info("Received feedback for warehouse {}: {}", warehouseId, message);
-        System.out.println("Feedback received for warehouse " + warehouseId + ": " + message);
         logFeedback(warehouseId, message);
     }
 
